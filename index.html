@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nexus AI – Your Smart Assistant</title>
+<style>
+:root{--bg:#f7f8fc;--surface:#ffffff;--text:#0f1530;--muted:#5b6385;--accent:#4f46e5;--accent2:#06b6d4;--border:#e3e6f2;--shadow:0 10px 40px rgba(79,70,229,.12);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b0e1d;--surface:#141935;--text:#eef0ff;--muted:#9aa3c7;--accent:#818cf8;--accent2:#22d3ee;--border:#252b50;--shadow:0 10px 40px rgba(0,0,0,.4);color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0b0e1d;--surface:#141935;--text:#eef0ff;--muted:#9aa3c7;--accent:#818cf8;--accent2:#22d3ee;--border:#252b50;--shadow:0 10px 40px rgba(0,0,0,.4);color-scheme:dark}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px)}
+body{background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.6;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
+#progress{position:fixed;top:env(safe-area-inset-top,0px);left:0;height:3px;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));z-index:30}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+nav{max-width:1100px;margin:auto;display:flex;align-items:center;justify-content:space-between;padding:14px 20px}
+.logo{font-weight:800;font-size:1.15rem;display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text)}
+.logo i{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:inline-block}
+nav ul{display:flex;gap:24px;list-style:none;padding:0}
+nav a{color:var(--muted);text-decoration:none;font-size:.95rem;font-weight:500}
+nav a:hover{color:var(--accent)}
+.btn{display:inline-block;padding:12px 24px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-weight:600;text-decoration:none;border:0;cursor:pointer;font-size:1rem;box-shadow:var(--shadow);transition:transform .2s}
+.btn:hover{transform:translateY(-2px)}
+.btn.ghost{background:transparent;color:var(--text);border:1px solid var(--border);box-shadow:none}
+section{max-width:1100px;margin:auto;padding:90px 20px}
+.hero{text-align:center;padding-top:80px;position:relative}
+.hero::before{content:"";position:absolute;left:50%;top:0;width:600px;max-width:100%;height:400px;transform:translateX(-50%);background:radial-gradient(closest-side,color-mix(in srgb,var(--accent) 25%,transparent),transparent);z-index:-1;animation:float 8s ease-in-out infinite}
+@keyframes float{50%{transform:translateX(-50%) translateY(30px)}}
+.badge{display:inline-block;padding:6px 14px;border:1px solid var(--border);border-radius:99px;font-size:.85rem;color:var(--muted);background:var(--surface);margin-bottom:22px}
+h1{font-size:clamp(2.2rem,6vw,4rem);line-height:1.1;font-weight:800;letter-spacing:-.02em}
+h1 span,h2 span{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{max-width:620px;margin:22px auto 34px;color:var(--muted);font-size:1.15rem}
+.cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+h2{font-size:clamp(1.7rem,4vw,2.4rem);text-align:center;margin-bottom:12px;letter-spacing:-.01em}
+.sub{text-align:center;color:var(--muted);max-width:560px;margin:0 auto 48px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:28px;transition:transform .25s,box-shadow .25s}
+.card:hover{transform:translateY(-6px);box-shadow:var(--shadow)}
+.ico{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;font-size:1.4rem;background:color-mix(in srgb,var(--accent) 14%,transparent);margin-bottom:16px}
+.card h3{margin-bottom:8px;font-size:1.1rem}
+.card p{color:var(--muted);font-size:.95rem}
+.steps{counter-reset:s;display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.step{position:relative;padding:28px;border-left:3px solid var(--accent);background:var(--surface);border-radius:0 18px 18px 0}
+.step::before{counter-increment:s;content:"0" counter(s);font-weight:800;font-size:2rem;color:var(--accent);opacity:.5;display:block}
+.step p{color:var(--muted);font-size:.95rem}
+.creator{display:flex;gap:28px;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:36px;flex-wrap:wrap;justify-content:center;text-align:left}
+.avatar{width:96px;height:96px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;color:#fff;font-size:2rem;font-weight:800;flex:none}
+.creator div{flex:1;min-width:240px}
+.creator h3{font-size:1.4rem}
+.creator small{color:var(--accent);font-weight:600}
+.creator p{color:var(--muted);margin-top:8px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:20px;text-align:center}
+.stats b{display:block;font-size:2.4rem;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.stats span{color:var(--muted);font-size:.9rem}
+footer{border-top:1px solid var(--border);text-align:center;padding:36px 20px;color:var(--muted);font-size:.9rem}
+.reveal{opacity:0;transform:translateY(40px);transition:opacity .8s ease,transform .8s ease}
+.reveal.in{opacity:1;transform:none}
+.reveal.d1{transition-delay:.12s}.reveal.d2{transition-delay:.24s}.reveal.d3{transition-delay:.36s}
+@media (max-width:720px){nav ul{display:none}section{padding:64px 20px}.creator{text-align:center}}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}.hero::before{animation:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<header><nav>
+  <a class="logo" href="#top"><i></i>Nexus AI</a>
+  <ul><li><a href="#features">Features</a></li><li><a href="#how">How it works</a></li><li><a href="#creator">Creator</a></li></ul>
+  <a class="btn" href="#chat" onclick="openChat(event)">Chat now</a>
+</nav></header>
+
+<main id="top">
+<section class="hero">
+  <div class="badge reveal">✨ Smart. Fast. Always available.</div>
+  <h1 class="reveal d1">Meet your <span>AI assistant</span> that actually helps</h1>
+  <p class="reveal d2">Ask questions, get answers, and solve problems in seconds, anytime, with a conversational assistant built for clarity and speed.</p>
+  <div class="cta reveal d3">
+    <a class="btn" href="#chat" onclick="openChat(event)">Start chatting</a>
+    <a class="btn ghost" href="#features">Explore features</a>
+  </div>
+</section>
+
+<section id="features">
+  <h2 class="reveal">Everything you need, <span>in one chat</span></h2>
+  <p class="sub reveal">A simple conversation replaces searching, waiting and guessing.</p>
+  <div class="grid">
+    <div class="card reveal"><div class="ico">⚡</div><h3>Instant answers</h3><p>Get helpful responses in seconds, with no queues and no waiting.</p></div>
+    <div class="card reveal d1"><div class="ico">🕒</div><h3>Available 24/7</h3><p>Day or night, your assistant is always ready when you are.</p></div>
+    <div class="card reveal d2"><div class="ico">💬</div><h3>Natural conversation</h3><p>Talk the way you normally do. No commands or special syntax.</p></div>
+    <div class="card reveal d3"><div class="ico">🔒</div><h3>Private &amp; secure</h3><p>Built with care so your conversations are handled responsibly.</p></div>
+  </div>
+</section>
+
+<section>
+  <div class="stats">
+    <div class="reveal"><b data-count="24">0</b><span>Hours available / day</span></div>
+    <div class="reveal d1"><b data-count="1">0</b><span>Second to start</span></div>
+    <div class="reveal d2"><b data-count="100">0</b><span>% free to try</span></div>
+  </div>
+</section>
+
+<section id="how">
+  <h2 class="reveal">How it <span>works</span></h2>
+  <p class="sub reveal">Three simple steps to get what you need.</p>
+  <div class="steps">
+    <div class="step reveal"><h3>Open the chat</h3><p>Tap the chat bubble in the corner of the page.</p></div>
+    <div class="step reveal d1"><h3>Ask anything</h3><p>Type your question in your own words.</p></div>
+    <div class="step reveal d2"><h3>Get your answer</h3><p>Receive a clear, helpful reply right away.</p></div>
+  </div>
+</section>
+
+<section id="creator">
+  <h2 class="reveal">Created by <span>Ibrahim Al-Karaawi</span></h2>
+  <p class="sub reveal">The person behind the assistant.</p>
+  <div class="creator reveal">
+    <div class="avatar">IK</div>
+    <div>
+      <h3>Ibrahim Al-Karaawi</h3>
+      <small>Creator &amp; Developer</small>
+      <p>Ibrahim designed and built this AI chatbot with a simple goal: make helpful, intelligent assistance easy for everyone to use.</p>
+    </div>
+  </div>
+</section>
+
+<section id="chat" style="text-align:center">
+  <h2 class="reveal">Ready to <span>try it?</span></h2>
+  <p class="sub reveal">Open the chat and ask your first question.</p>
+  <button class="btn reveal d1" onclick="openChat(event)">Open the chat</button>
+</section>
+</main>
+
+<footer>© <span id="yr"></span> Nexus AI · Created by Ibrahim Al-Karaawi</footer>
+
+<script src="https://cdn.botpress.cloud/webchat/v5.0/inject.js"></script>
+<script src="https://files.bpcontent.cloud/2026/11/03/19/20261103190148-UNTX9723.js" defer></script>
+<script>
+document.getElementById('yr').textContent=new Date().getFullYear();
+function openChat(e){
+  if(e)e.preventDefault();
+  try{ if(window.botpress){window.botpress.open();return;} }catch(err){}
+  document.getElementById('chat').scrollIntoView({behavior:'smooth'});
+}
+// scroll progress
+var bar=document.getElementById('progress');
+addEventListener('scroll',function(){
+  var h=document.documentElement.scrollHeight-innerHeight;
+  bar.style.width=(h>0?scrollY/h*100:0)+'%';
+},{passive:true});
+// scroll reveal
+var io=new IntersectionObserver(function(es){
+  es.forEach(function(en){
+    if(en.isIntersecting){
+      en.target.classList.add('in');
+      var c=en.target.querySelector('[data-count]');
+      if(c)count(c);
+      io.unobserve(en.target);
+    }
+  });
+},{threshold:.15});
+document.querySelectorAll('.reveal').forEach(function(el){io.observe(el)});
+function count(el){
+  var t=+el.dataset.count,n=0,step=Math.max(1,Math.ceil(t/40));
+  var id=setInterval(function(){n=Math.min(t,n+step);el.textContent=n;if(n>=t)clearInterval(id)},30);
+}
+</script>
+</body>
+</html>
